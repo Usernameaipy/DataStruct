@@ -1,12 +1,12 @@
 #ifndef QUEUE_H
 #define QUEUE_H
-#include <stdio.h>
-#include <stdlib.h>
 #include <limits.h>
 #include <stdbool.h>
-typedef struct queue{
-    int variable;
-    struct queue *next;
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct queue {
+  int variable;
+  struct queue *next;
 } Queue_T;
 // Создаёт начальный элемент очереди
 // P.S применяеться единажды
