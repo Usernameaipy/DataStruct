@@ -30,4 +30,4 @@ style :
 	find . -name "*.c" -o -name "*.h" | xargs clang-format -style=Google -i
 
 valgrind : clean
-	make test && valgrind --tool=memcheck --leak-cheak=yes $(BUILDDIR)test
+	make test && valgrind --tool=memcheck --leak-check=yes $(BUILDDIR)test
