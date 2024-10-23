@@ -26,18 +26,19 @@ bool insertQueue(Queue_T *root, int var) {
 }
 
 Queue_T *pop(Queue_T *root, int *popVar) {
+  if ((!root)) return root;
   Queue_T *newRoot = root->next;
-  *popVar = root->variable;
+  if (popVar) *popVar = root->variable;
   free(root);
   root = NULL;
   return newRoot;
 }
 
-void removeQueue(Queue_T *root) {
-  if (root != NULL) {
-    removeQueue(root->next);
-    free(root);
+void removeQueue(Queue_T **root) {
+  if (root != NULL && (*root) != NULL) {
+    removeQueue(&((*root)->next));
+    free((*root));
   }
-  root = NULL;
+  *root = NULL;
   return;
 }
