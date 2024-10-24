@@ -88,7 +88,7 @@ void removeMul(Mul_T **root) {
   if (!root || !(*root))
     return;
   if ((*root) != NULL) {
-    removeMul((*root)->next);
+    removeMul(&((*root)->next));
     free((*root));
   }
   *root = NULL;
