@@ -16,11 +16,16 @@ Mul_T *searchMul(Mul_T *root, int value) {
   if (!root || (value > INT_MAX || value < INT_MIN))
     return NULL;
   Mul_T *rootCp = root;
-  while (rootCp != NULL || rootCp->val != value) {
+  Mul_T *cpy = NULL;
+  while (rootCp != NULL) {
+    if (rootCp->val == value) {
+      cpy = rootCp;
+      break;
+    }
     rootCp = rootCp->next;
   }
-  if (rootCp != NULL && rootCp->val == value)
-    return rootCp;
+  if (cpy)
+    return cpy;
   return NULL;
 }
 
