@@ -203,6 +203,23 @@ START_TEST(deleteMulIsOneVal) {
 }
 END_TEST
 
+START_TEST(removeMulNormal) {
+  Mul_T *multitude = initMul(89);
+  insertMul(multitude, 78);
+  insertMul(multitude, 67);
+  insertMul(multitude, 87);
+  removeMul(&multitude);
+  _ck_assert_ptr(multitude, ==, NULL);
+}
+END_TEST
+
+START_TEST(removeMulIsNotMul) {
+  Mul_T *multitude = NULL;
+  removeMul(&multitude);
+  _ck_assert_ptr(multitude, ==, NULL);
+}
+END_TEST
+
 Suite *multitudeTest(void) {
   Suite *suite = suite_create("MultitudeTest");
   TCase *tcase = tcase_create("MultitudeTest");
@@ -227,6 +244,10 @@ Suite *multitudeTest(void) {
   tcase_add_test(tcase, deleteMulIsNotMul);
   tcase_add_test(tcase, deleteMulISNotVal);
   tcase_add_test(tcase, deleteMulIsOneVal);
+
+  // Удаление ввсего множества
+  tcase_add_test(tcase, removeMulNormal);
+  tcase_add_test(tcase, removeMulIsNotMul);
 
   suite_add_tcase(suite, tcase);
   return suite;
