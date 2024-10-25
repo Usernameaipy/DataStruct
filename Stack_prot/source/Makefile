@@ -1,11 +1,12 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -Werror -std=c11 -pedantic
 BUILDDIR=../build/
+TESTFLAGS = -lcheck -g -lm -lpthread -lsubunit
 
-all : stack
+all : stack start
 
 stack : stack.o stack_test.o
-	$(CC) $(CFLAGS) stack.o stack_test.o -o $(BUILDDIR)stack
+	$(CC) $(CFLAGS) stack.o stack_test.o -o $(BUILDDIR)stack $(TESTFLAGS)
 
 stack.o : stack.c stack.h
 	$(CC) $(CFLAGS) -c stack.c -o stack.o
@@ -18,3 +19,15 @@ clean :
 	rm -rf $(BUILDDIR)*
 
 rebuild : clean all
+
+start :
+	$(BUILDDIR)stack
+
+style_check :
+	find . -name "*.c" -o -name "*.h" | xargs clang-format -style=Google -n
+
+style :
+	find . -name "*.c" -o -name "*.h" | xargs clang-format -style=Google -i
+
+valgrind :
+	make stack && valgrind --tool=memcheck --leak-check=yes $(BUILDDIR)stack
