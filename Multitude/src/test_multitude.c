@@ -85,9 +85,9 @@ START_TEST(insertMulIsNotMul) {
   bool one = insertMul(multitude, 78);
   bool two = insertMul(multitude, 65);
   bool three = insertMul(multitude, 63);
-  ck_assert_int_eq(one, 0);
-  ck_assert_int_eq(two, 0);
-  ck_assert_int_eq(three, 0);
+  ck_assert_int_eq(one, ERROR);
+  ck_assert_int_eq(two, ERROR);
+  ck_assert_int_eq(three, ERROR);
   if (multitude) {
     removeMul(&multitude);
   }
@@ -99,9 +99,9 @@ START_TEST(insertMulIsLarge) {
   bool one = insertMul(multitude, 1000000);
   bool two = insertMul(multitude, 32789999);
   bool three = insertMul(multitude, 237822222);
-  ck_assert_int_eq(one, 1);
-  ck_assert_int_eq(two, 1);
-  ck_assert_int_eq(three, 1);
+  ck_assert_int_eq(one, OK);
+  ck_assert_int_eq(two, OK);
+  ck_assert_int_eq(three, OK);
   removeMul(&multitude);
 }
 END_TEST
@@ -111,10 +111,95 @@ START_TEST(insertMulIsMul) {
   bool one = insertMul(multitude, 76);
   bool two = insertMul(multitude, 89);
   bool three = insertMul(multitude, 89);
-  ck_assert_int_eq(one, 0);
-  ck_assert_int_eq(two, 1);
-  ck_assert_int_eq(three, 0);
+  ck_assert_int_eq(one, ERROR);
+  ck_assert_int_eq(two, OK);
+  ck_assert_int_eq(three, ERROR);
   removeMul(&multitude);
+}
+END_TEST
+
+START_TEST(deleteMulNormal) {
+  Mul_T *multitude = initMul(78);
+  bool one = insertMul(multitude, 43);
+  bool two = insertMul(multitude, 32);
+  bool three = insertMul(multitude, 89);
+  ck_assert_int_eq(one, OK);
+  ck_assert_int_eq(two, OK);
+  ck_assert_int_eq(three, OK);
+  Mul_T *oneP = searchMul(multitude, 78);
+  Mul_T *twoP = searchMul(multitude, 43);
+  Mul_T *threeP = searchMul(multitude, 89);
+  _ck_assert_ptr(oneP, !=, NULL);
+  _ck_assert_ptr(twoP, !=, NULL);
+  _ck_assert_ptr(threeP, !=, NULL);
+  ck_assert_int_eq(oneP->val, 78);
+  ck_assert_int_eq(twoP->val, 43);
+  ck_assert_int_eq(threeP->val, 89);
+  one = deleteMul(&multitude, 78);
+  two = deleteMul(&multitude, 43);
+  three = deleteMul(&multitude, 89);
+  ck_assert_int_eq(one, OK);
+  ck_assert_int_eq(two, OK);
+  ck_assert_int_eq(three, OK);
+  oneP = searchMul(multitude, 78);
+  twoP = searchMul(multitude, 43);
+  threeP = searchMul(multitude, 89);
+  _ck_assert_ptr(oneP, ==, NULL);
+  _ck_assert_ptr(twoP, ==, NULL);
+  _ck_assert_ptr(threeP, ==, NULL);
+  removeMul(&multitude);
+}
+END_TEST
+
+START_TEST(deleteMulIsNotMul) {
+  Mul_T *multitude = NULL;
+  bool one = deleteMul(&multitude, 78);
+  bool two = deleteMul(&multitude, 1);
+  bool three = deleteMul(&multitude, 900000000);
+  ck_assert_int_eq(one, ERROR);
+  ck_assert_int_eq(two, ERROR);
+  ck_assert_int_eq(three, ERROR);
+  if (multitude) {
+    removeMul(&multitude);
+  }
+}
+END_TEST
+
+START_TEST(deleteMulISNotVal) {
+  Mul_T *multitude = initMul(78);
+  bool one = insertMul(multitude, 43);
+  bool two = insertMul(multitude, 32);
+  bool three = insertMul(multitude, 89);
+  ck_assert_int_eq(one, OK);
+  ck_assert_int_eq(two, OK);
+  ck_assert_int_eq(three, OK);
+  Mul_T *oneP = searchMul(multitude, 78);
+  Mul_T *twoP = searchMul(multitude, 43);
+  Mul_T *threeP = searchMul(multitude, 89);
+  _ck_assert_ptr(oneP, !=, NULL);
+  _ck_assert_ptr(twoP, !=, NULL);
+  _ck_assert_ptr(threeP, !=, NULL);
+  ck_assert_int_eq(oneP->val, 78);
+  ck_assert_int_eq(twoP->val, 43);
+  ck_assert_int_eq(threeP->val, 89);
+  one = deleteMul(&multitude, 56);
+  two = deleteMul(&multitude, 23);
+  three = deleteMul(&multitude, 98);
+  ck_assert_int_eq(one, ERROR);
+  ck_assert_int_eq(two, ERROR);
+  ck_assert_int_eq(three, ERROR);
+  removeMul(&multitude);
+}
+END_TEST
+
+START_TEST(deleteMulIsOneVal) {
+  Mul_T *multitude = initMul(89);
+  bool one = deleteMul(&multitude, 89);
+  ck_assert_int_eq(one, OK);
+  _ck_assert_ptr(multitude, ==, NULL);
+  if (multitude) {
+    removeMul(&multitude);
+  }
 }
 END_TEST
 
@@ -136,6 +221,12 @@ Suite *multitudeTest(void) {
   tcase_add_test(tcase, insertMulIsNotMul);
   tcase_add_test(tcase, insertMulIsLarge);
   tcase_add_test(tcase, insertMulIsMul);
+
+  // Удаление элемента из множества
+  tcase_add_test(tcase, deleteMulNormal);
+  tcase_add_test(tcase, deleteMulIsNotMul);
+  tcase_add_test(tcase, deleteMulISNotVal);
+  tcase_add_test(tcase, deleteMulIsOneVal);
 
   suite_add_tcase(suite, tcase);
   return suite;

@@ -50,7 +50,7 @@ bool insertMul(Mul_T *root, int value) {
 }
 
 bool deleteMul(Mul_T **root, int value) {
-  if ((!root) || (value > INT_MAX || value < INT_MIN))
+  if ((!root || !*root) || (value > INT_MAX || value < INT_MIN))
     return false;
   Mul_T *del = searchMul((*root), value);
   if (del) {
@@ -62,8 +62,9 @@ bool deleteMul(Mul_T **root, int value) {
       return true;
     }
     if (nextMul && !prefMul) {
-      *root = nextMul;
-      free(del);
+      free((*root));
+      nextMul->pref = NULL;
+      *root = (Mul_T *)nextMul;
       return true;
     }
     if (nextMul && prefMul) {
@@ -73,6 +74,7 @@ bool deleteMul(Mul_T **root, int value) {
       return true;
     } else {
       free(del);
+      (*root) = NULL;
       return true;
     }
   }
