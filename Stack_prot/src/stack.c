@@ -1,8 +1,7 @@
 #include "stack.h"
 
 Stack_T* initSt(int var) {
-  if(var>INT_MAX || var<INT_MIN)
-    return NULL;
+  if (var > INT_MAX || var < INT_MIN) return NULL;
   Stack_T* stk = (Stack_T*)malloc(sizeof(Stack_T));
   stk->variable = var;
   stk->next = NULL;
@@ -10,21 +9,21 @@ Stack_T* initSt(int var) {
 }
 
 Stack_T* pushSt(int var, Stack_T* root) {
-  if(!root || (var>INT_MAX || var<INT_MIN))
-    return NULL;
+  if (!root || (var > INT_MAX || var < INT_MIN)) return NULL;
   Stack_T* new_root = initSt(var);
   new_root->next = root;
   return new_root;
 }
 
-Stack_T* popSt(Stack_T* root) {
-  if(!root)
-    return NULL;
+Stack_T* popSt(Stack_T* root, int* tmp) {
+  if (!root) return NULL;
   Stack_T* new;
   if (root->next != NULL) {
+    *tmp = root->variable;
     new = root->next;
     free(root);
   } else {
+    *tmp = root->variable;
     new = NULL;
     free(root);
   }
