@@ -35,4 +35,5 @@ void removeSt(Stack_T** root) {
     removeSt(&((*root)->next));
     free((*root));
   }
+  (*root) = NULL;
 }

@@ -130,6 +130,23 @@ START_TEST(popStIsOneSt) {
 }
 END_TEST
 
+START_TEST(removeStNormal) {
+  Stack_T *stack = initSt(89), *one = NULL;
+  one = pushSt(78, stack);
+  stack = pushSt(32, one);
+  one = pushSt(56, stack);
+  _ck_assert_ptr(one, !=, NULL);
+  removeSt(&one);
+  _ck_assert_ptr(one, ==, NULL);
+}
+END_TEST
+
+START_TEST(removeStIsNotSt) {
+  Stack_T *stack = NULL;
+  removeSt(&stack);
+}
+END_TEST
+
 Suite *createTestStack() {
   Suite *suite = suite_create("TestStack");
   TCase *tcase = tcase_create("TestStack");
@@ -147,6 +164,10 @@ Suite *createTestStack() {
   tcase_add_test(tcase, popStIsNotSt);
   tcase_add_test(tcase, popStIsNotTmp);
   tcase_add_test(tcase, popStIsOneSt);
+
+  // Удаление стэка
+  tcase_add_test(tcase, removeStNormal);
+  tcase_add_test(tcase, removeStIsNotSt);
 
   suite_add_tcase(suite, tcase);
   return suite;
