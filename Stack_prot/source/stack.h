@@ -1,8 +1,8 @@
 #ifndef STACK_H
 #define STACK_H
 struct stack {
-    int variable;
-    struct stack* next;
+  int variable;
+  struct stack* next;
 };
 struct stack* initSt(int var);
 struct stack* pushSt(int var, struct stack* root);
