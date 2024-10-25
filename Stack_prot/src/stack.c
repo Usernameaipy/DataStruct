@@ -19,11 +19,11 @@ Stack_T* popSt(Stack_T* root, int* tmp) {
   if (!root) return NULL;
   Stack_T* new;
   if (root->next != NULL) {
-    *tmp = root->variable;
+    if (tmp != NULL) *tmp = root->variable;
     new = root->next;
     free(root);
   } else {
-    *tmp = root->variable;
+    if (tmp != NULL) *tmp = root->variable;
     new = NULL;
     free(root);
   }
